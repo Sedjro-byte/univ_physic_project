@@ -100,6 +100,10 @@ class AnalyticalModelExample(object):
         print("alpha      : %.2f °" % np.rad2deg(self.alpha))
 
 
+ 
+
+
+
 
 ########################################################################################################################################
 
@@ -127,13 +131,13 @@ if task == 0:
     # Pour tracer le graphe en fonction de alpha il faux avoir un tableau de v_z et v en fonction de alpha
 
     # declaration générales des variables 
-    alphamin=0
-    alphamax=90
+    alphamin=20
+    alphamax=70
     v_0=100
     h=10
     t=0.2
 
-    alpha=np.linspace(alphamin, alphamax,20)
+    alpha=np.linspace(alphamin, alphamax,5)
     model1=AnalyticalModelExample(h,v_0, alpha[0])
     v_z=np.zeros(len(alpha))
     v=np.zeros(len(alpha))

@@ -28,6 +28,11 @@ class AnalyticalModelExample(object):
         self.time=np.linspace(0,100,80)
         self.x= np.zeros(len(self.time))
         self.z= np.zeros(len(self.time))
+        self.v_x= np.zeros(len(self.time))
+        self.v_z= np.zeros(len(self.time))
+        self.v= np.zeros(len(self.time))
+    
+
   
         
 
@@ -97,11 +102,17 @@ class AnalyticalModelExample(object):
         self.time=np.linspace(0,t_end,npt)
         self.x= np.zeros(len(self.time))
         self.z= np.zeros(len(self.time))
+        self.v_x= np.zeros(len(self.time))
+        self.v_z= np.zeros(len(self.time))
+        self.v= np.zeros(len(self.time))
         for i in (0,len(self.time)-1):
             self.x [i] = self.v_0*np.cos(self.alpha)*self.time[i]
             self.z [i]= -(g*0.5*(self.time[i])**2) + self.v_0 * self.time[i]*np.sin(self.alpha) + self.h
+            self.v_x [i]= self.v_0*np.cos(self.alpha)
+            self.v_z [i]= self.v_0 * np.sin(self.alpha) - g*self.time[i]
+            self.v [i]= np.sqrt(self.v_x [i]**2 + self.v_z [i]**2)  
         
-        return [ self.time ,  self.x , self.z]
+        return [ self.time ,  self.x , self.z, self.v_x , self.v_z , self.v ]
     
 
     
@@ -115,11 +126,34 @@ class AnalyticalModelExample(object):
         plt.legend(["Position Z en fonction de la position z "], fontsize=12)
         plt.show ()
 
+    def plot_component(self, t_end,npt):
+        liste= self.set_trajectory (t_end,npt ) 
+        time1= liste[0]
+        v_z1= liste[4]
+        v1= liste[5]
+        plt.plot(time1, v_z1, marker="+",color="green",linewidth=3)
+        plt.plot(time1, v1, marker="o",color="red",linewidth=3)
+        plt.fill_between(time1, v_z1 , v1)
+        plt.xlabel("Time")
+        plt.ylabel("Position X and Z")
+        plt.legend(["Position X en fonction du temps ","Position Z en fonction du temps "], fontsize=12)
+        plt.show ()
 
 
 
+############################################################################ 10.1 Graphiques de trajectoires
+#############################################Not working part
+"""""
+   def set_trajectoryies(self, alpha):    # alpha est une liste
+        x=np.zeros(len(alpha))
+        z=np.zeros(len(alpha))
 
-
+        for i in range (0,len (alpha)) :
+            x[i]= self.v_0*np.cos(np.deg2rad(alpha[i])) *self.time
+            z[i]= -(g*0.5*self.time**2) + self.v_0 * np.sin(np.deg2rad(alpha[i]))*self.time + self.h
+        
+        return [ x , z ]"""
+##################################################################################################  Not working part
 
 
 
@@ -133,5 +167,8 @@ alpha=30
 
 model= AnalyticalModelExample(h,v_0,alpha)
 
-print(model.set_trajectory(2,50))
+print(model.set_trajectory(2,50))     # en fonction de t temps et npt nombre de point 
+
+#print(model.set_trajectoryies([20,40,60]))   # en fonction d'une liste d'angle alpha    
 model.plot_trajectory(2,50)
+model.plot_component(2,50)
