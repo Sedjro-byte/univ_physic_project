@@ -183,11 +183,6 @@ class AnalyticalModelExample(object):
         plt.show ()
 
 
-"""
-############################################################################ 10.1 Graphiques de trajectoires
-#############################################Not working part
-J ai remplacé set_trajectoryalpha par set_trajectory pour simplifier, car le rôle de la fonction est déjà de travailler avec un angle
-alpha J ai clarifié que la première fonction gère probablement une liste d'angles pour être cohérent avec l idée de tracer pour chaque angle alpha """
 
 
 
