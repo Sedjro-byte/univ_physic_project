@@ -102,7 +102,7 @@ class AnalyticalModelExample(object):
         self.time=np.linspace(0,t_end,npt)
         self.x = self.v_0*np.cos(self.alpha)*self.time
         self.z= -(g*0.5*(self.time)**2) + self.v_0 * self.time*np.sin(self.alpha) + self.h
-        self.v_x= self.v_0*np.cos(self.alpha)*np.ones(len(self.time))
+        self.v_x= self.v_0*np.cos(self.alpha)
         self.v_z= self.v_0 * np.sin(self.alpha) - g*self.time
         self.v= np.sqrt(self.v_x**2 + self.v_z**2)
       
@@ -120,14 +120,73 @@ class AnalyticalModelExample(object):
     def plot_component(self):
 
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6), sharex=True)        
+        fig.suptitle("Composantes")
+        ax1.plot(self.time, self.v_z, marker="+",color="red",linewidth=3)
+        ax1.fill_between(self.time, self.v_z, alpha=0.3, color='red')
+        ax1.set_ylabel("$v_z$")
+        ax1.grid(True, linestyle='--', alpha=0.5)
+
+        ax2.plot(self.time, self.v, marker="o",color="green",linewidth=3)
+        ax2.fill_between(self.time,self.v, alpha=0.3, color='green')
+        ax2.set_ylabel("$v$")
+        ax2.set_xlabel("time (s)")
+        ax2.grid(True, linestyle='--', alpha=0.5)
         
-        ax1.plot(self.time, self.v_z, marker="+",color="green",linewidth=3)
-        ax2.plot(self.time, self.v, marker="o",color="red",linewidth=3)
-        plt.fill_between(self.time, self.v_z ,self.v)
-        plt.xlabel("Time")
-        plt.ylabel("Position X and Z")
-        plt.legend(["Position X en fonction du temps ","Position Z en fonction du temps "], fontsize=12)
-        plt.show ()
+        plt.tight_layout(rect=[0, 0, 1, 0.95])  # ajuste les marges
+        plt.show()
+    
+    def set_trajectories(self):
+
+        list_alpha=[]
+        list_x=[]
+        list_z=[]
+        list_v_x=[]
+        list_v_z=[]
+        list_v=[]
+        x=z=v_x=v_z=v=0
+
+        for i in range (20,71):
+            if i%5==0:
+                list_alpha.append(i)
+
+        for i in list_alpha:
+            
+            x = self.v_0*np.cos(i)*self.time
+            z= -(g*0.5*(self.time)**2) + self.v_0 * self.time*np.sin(i) + self.h
+            v_x= self.v_0*np.cos(i)
+            v_z= self.v_0 * np.sin(i) - g*self.time
+            v= np.sqrt(self.v_x**2 + self.v_z**2)
+            list_x.append(x)
+            list_z.append(z)
+            list_v_x.append(v_x)
+            list_v_z.append(v_z)
+            list_v.append(v)
+
+        return [list_x , list_z, list_v_x, list_v_z, list_v]
+    
+    def plot_trajectories(self, liste):
+         
+        #plt.figure(figsize=(10, 6)) # Crée une nouvelle figure
+        for element in liste:
+            X=element[0]
+            Z=element[1]
+            plt.plot(X, Z)
+
+        # --- Mise en forme finale du graphique ---
+        plt.xlabel("Position X (m)")
+        plt.ylabel("Position Z (m)")
+        plt.title("FIGURE 3 – Différentes trajectoires en fonction de α")
+        plt.legend(title="Angle de lancement", loc='upper right')
+        plt.grid(True, linestyle='--', alpha=0.6)
+        plt.ylim(bottom=0) # Assure que l'axe Z commence à zéro
+        plt.show()
+
+
+
+      
+
+       
+
 
 
 
@@ -138,51 +197,7 @@ class AnalyticalModelExample(object):
 
 
 
-##################################################################################################################################################""
-    def set_trajectoryalpha(self,t_end,npt,alpha1 ):    # t_end is a nombers and npt is number
-        self.time=np.linspace(0,t_end,npt)
-        self.x= self.v_0*np.cos(alpha1)*self.time
-        self.z= self.v_0 * np.sin(alpha1)*self.time - (g*0.5*(self.time)**2) + self.h
-        self.v_x= self.v_0*np.cos(alpha1)*np.ones(len(self.time))
-        self.v_z= self.v_0 * np.sin(alpha1) - g*self.time   
-        self.v= np.sqrt(self.v_x**2 + self.v_z**2)
-         for i in (0,len(self.time)-1):
-            self.x [i] = self.v_0*np.cos(alpha1)*self.time[i]
-            self.z [i]= -(g*0.5*(self.time[i])**2) + self.v_0 * self.time[i]*np.sin(alpha1) + self.h
-            self.v_x [i]= self.v_0*np.cos(alpha1)
-            self.v_z [i]= self.v_0 * np.sin(alpha1) - g*self.time[i]
-            self.v [i]= np.sqrt(self.v_x [i]**2 + self.v_z [i]**2)  
-            
-        return [ self.time ,  self.x , self.z, self.v_x , self.v_z , self.v ]"""
-                                                                                                                                                              
-
-    def set_trajectories(self,alpha):    # alpha est une liste avec t_ent pour faire des trajectoires pour chaque alpha en focntion du temps 
-        x=[]
-        z=[]
-        alpha=[]
-
-        for i in range (20,70) :
-            if i % 5 ==0 :
-                alpha.append (i)
-
-        for i in alpha :
-            liste=self.set_trajectoryalpha (t_end,npt,i ) 
-            x.append (liste[1])
-            z.append(liste[2])  # derniere valeur de x                 
-        return [ x , z ]      # x et z sont des listes de lsites x contient 11 listes pour xhaque valeur de alpha or on a 11 valeurs pour alpha car on a 5 multiples de 5 esntre 20 et 70
-
-    def set_trajectories_plot(self,t_end,npt):
-        liste= self.set_trajectories (t_end,npt ) 
-        x1= liste[0]
-        z1= liste[1]
-        for i in range (len(x1)) :
-            plt.plot(x1[i], z1[i], marker="+",linewidth=3)
-        plt.xlabel("Position X")
-        plt.ylabel("Position Z")
-        plt.legend(["Position Z en fonction de la position z "], fontsize=12)
-        plt.show ()
-
-
+    
 
 
 
@@ -206,11 +221,20 @@ h=10
 alpha=30
 
 model= AnalyticalModelExample(h,v_0,alpha)
-
+print(model.set_trajectories())
 print(model.set_trajectory(2,50))     # en fonction de t temps et npt nombre de point 
 #print("le tableu des trajectoires en fonction de la variation de alpha", model.set_trajectories(5,100))
 
 #print(model.set_trajectoryies([20,40,60]))   # en fonction d'une liste d'angle alpha    
 model.plot_trajectory()
 model.plot_component()
-model.set_trajectories_plot(2,50)
+model.plot_trajectories(model.set_trajectories()   )
+
+# list_alpha=[]
+
+# for i in range (20,71):
+#     if i%5==0:
+#         list_alpha.append(i)
+
+
+# print(list_alpha)
