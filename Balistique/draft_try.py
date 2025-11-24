@@ -166,18 +166,18 @@ class AnalyticalModelExample(object):
     
     def plot_trajectories(self, liste):
          
-        #plt.figure(figsize=(10, 6)) # Crée une nouvelle figure
+        plt.figure(figsize=(10, 6)) # Crée une nouvelle figure
         for element in liste:
             X=element[0]
             Z=element[1]
-            plt.plot(X, Z)
+            plt.plot(Z, X)
 
         # --- Mise en forme finale du graphique ---
         plt.xlabel("Position X (m)")
         plt.ylabel("Position Z (m)")
         plt.title("FIGURE 3 – Différentes trajectoires en fonction de α")
         plt.legend(title="Angle de lancement", loc='upper right')
-        plt.grid(True, linestyle='--', alpha=0.6)
+        plt.grid(True, linestyle='--')
         plt.ylim(bottom=0) # Assure que l'axe Z commence à zéro
         plt.show()
 
@@ -190,24 +190,6 @@ class AnalyticalModelExample(object):
 
 
 
-
-"""
-
-
-
-
-
-    
-
-
-
-    
-    
-
-    
-
-     
-#"""
 ##################################################################################################  Not working part
 
 
@@ -216,25 +198,44 @@ class AnalyticalModelExample(object):
 
 
 
-v_0=3
-h=10
+v_0=20
+h=20
 alpha=30
 
 model= AnalyticalModelExample(h,v_0,alpha)
-print(model.set_trajectories())
-print(model.set_trajectory(2,50))     # en fonction de t temps et npt nombre de point 
-#print("le tableu des trajectoires en fonction de la variation de alpha", model.set_trajectories(5,100))
 
-#print(model.set_trajectoryies([20,40,60]))   # en fonction d'une liste d'angle alpha    
+print(model.set_trajectory(2,50))      # reponse a la question 9.2)2 
+model.plot_component()                  # reponse a la question 9.2)3
 model.plot_trajectory()
-model.plot_component()
-model.plot_trajectories(model.set_trajectories()   )
-
-# list_alpha=[]
-
-# for i in range (20,71):
-#     if i%5==0:
-#         list_alpha.append(i)
+print(model.set_trajectories())        # reponse a la question 10.1)1
+model.plot_trajectories(model.set_trajectories())           # reponse a la question 10.1)2
 
 
-# print(list_alpha)
+
+
+
+
+def plot_trajectories(self, liste, angles):
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(12, 6))   # Taille similaire à la figure donnée
+
+    # --- tracé des courbes ---
+    for element, alpha in zip(liste, angles):
+        X = element[0]     # coordonnées x
+        Z = element[1]     # coordonnées z
+        plt.plot(X, Z, label=f"α : {alpha}°")   # x sur l'axe horizontal
+
+    # --- Mise en forme ---
+    plt.xlabel("x")
+    plt.ylabel("z")
+    plt.title("trajectories")
+
+    # Légende à droite comme dans l’exemple
+    plt.legend(title="", loc="center right", bbox_to_anchor=(1.25, 0.5))
+
+    plt.grid(True)
+    plt.ylim(bottom=0)
+
+    plt.tight_layout()
+    plt.show()
